@@ -6,6 +6,27 @@
 
 .card.rare{border-color:#75aabc}.card.rare .rarity{color:#a5d9eb}.card.legendary{border-color:#d6aa5f;background:#3b392b}.card.legendary .rarity{color:#f4ce7b}
 
+/* Phone portrait: keep navigation, controls and upgrade choices usable without rotation. */
+@media (max-width:600px) and (orientation:portrait){
+ .home-wrap{display:block;height:100%;overflow-y:auto;overscroll-behavior:contain;padding:0 20px}
+ header{height:58px}.brand{font-size:11px}.brand-mark{font-size:24px}
+ .home-main{display:flex;flex-direction:column;align-items:stretch;gap:24px;padding:36px 0 26px}
+ h1{font-size:clamp(50px,15vw,66px);margin:12px 0 5px}.english{font-size:9px;letter-spacing:.24em}
+ .hero p{font-size:13px;line-height:1.8;margin:18px 0}.hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .hero-actions .primary{grid-column:1 / -1;width:100%;min-height:52px}.hero-actions .secondary{min-width:0;min-height:46px}
+ .record{margin-top:22px}.select{padding:17px}.char{min-height:66px}.avatar{height:46px;width:46px}.char-info small{font-size:11px}
+ footer{padding:14px 0 20px;display:block;line-height:1.6;font-size:10px}footer span{display:block}footer span:last-child{text-align:left;margin-top:6px}
+ .hud-top{top:10px;left:10px;right:10px;grid-template-columns:minmax(100px,1fr) 90px 92px;gap:4px;align-items:start}
+ .hud-panel{padding:8px}.hud-meta{font-size:9px}.health-text{font-size:9px}.clock small{font-size:7px;letter-spacing:.08em}.clock strong{font-size:22px}.clock span{font-size:8px}
+ .hud-right .icon-btn{width:44px;height:44px;font-size:16px}.run-coins{padding:10px 5px;margin-left:1px;font-size:11px}
+ #weaponHud{display:flex;flex-wrap:wrap;justify-content:flex-end}.weapon-icon{width:30px;height:30px;font-size:15px;margin:4px 0 0 3px}
+ .bottom-hud{left:15px;right:15px;bottom:14px}.xp-label{font-size:10px}#joystick{left:20px;bottom:52px}
+ .overlay{padding:12px}.modal{width:100%;max-height:90vh;padding:18px}.modal-head{margin-bottom:14px}.modal-head h2{font-size:23px}.modal-head p{font-size:11px;line-height:1.5}
+ .cards{grid-template-columns:1fr;gap:8px}.card{min-height:88px;padding:11px;display:grid;grid-template-columns:38px 1fr;grid-template-rows:auto auto auto;column-gap:10px}
+ .card .symbol{grid-row:1 / 4;align-self:center;margin:0;font-size:25px}.card .rarity{font-size:9px}.card h3{font-size:15px;margin:3px 0}.card p{font-size:11px;line-height:1.5}
+ .modal-grid{grid-template-columns:1fr}.item{min-height:64px;padding:10px}.summary-stats{grid-template-columns:repeat(2,1fr)}.summary-stats strong{font-size:20px}.actions{flex-wrap:wrap}.actions button{min-height:44px}
+}
+
 </style></head><body>
 <div id="app"><canvas id="game"></canvas><div id="vignette"></div>
 <section id="home" class="screen"><div class="home-wrap"><header><div class="brand"><span class="brand-mark">✳</span><span>ASHLANDS <small> / SURVIVORS</small></span></div><button class="icon-btn" id="openSettings" aria-label="设置">⚙</button></header><main class="home-main"><div class="hero"><div class="eyebrow"><span></span> 一场没有终点的旅程</div><h1>荒野<span>余烬</span></h1><div class="english">ENDLESS SURVIVORS <b>—</b> VOL. 01</div><p>黑夜不会结束，但你可以变得更强。<br>在无尽的荒野中走位、收集、构筑，活下去。</p><div class="hero-actions"><button class="primary" id="start">开始无尽模式 <span>→</span></button><button class="secondary" id="openCodex">图鉴 <span>↗</span></button><button class="secondary" id="openShop">商店 <span>↗</span></button></div><div class="record"><span>◷</span><div><small>最长存活记录</small><strong id="best">00:00</strong></div><i></i><span>✦</span><div><small>永久金币</small><strong id="coins">0</strong></div></div></div><aside class="select"><div class="section-label"><span>选择幸存者</span><small>SELECT SURVIVOR</small></div><div id="characters"></div><div class="control-tip"><span>⌨</span><div><b>移动就是一切</b><small>WASD / 方向键移动 · 武器自动攻击</small></div></div></aside></main><footer><span>✧ &nbsp; 每一次倒下，都是下一次启程。</span><span>进度保存在浏览器本地；无痕模式关闭标签或清理缓存会清除存档，无法恢复。</span></footer></div></section>
@@ -164,7 +185,7 @@ for(let b of g.bullets){circle(b.x,b.y,b.r+3,b.color+'44');circle(b.x,b.y,b.r,b.
 if(g.weapons.axe){let weapon=g.weapons.axe,count=axeCount(weapon);for(let i=0;i<count;i++){let a=g.t*2.3+i*6.28/count,r=(58+weapon.level*4)*g.area,x=g.x+Math.cos(a)*r,y=g.y+Math.sin(a)*r;ctx.save();ctx.translate(x,y);ctx.rotate(a+g.t*3);if(weapon.evolved)ctx.filter='sepia(.7) saturate(1.6)';ctx.drawImage(sprites.axe,-19,-19,38,38);ctx.restore()}}
 for(let p of g.particles)circle(p.x,p.y,Math.max(1,p.life*9),p.color);
 ellipse(ctx,'#091b1688',g.x+2,g.y+12,17,6);if(!(g.inv>0&&Math.floor(g.inv*12)%2)){let bob=g.moving?Math.sin(g.t*12)*1.5:Math.sin(g.t*2)*.5;drawSprite(sprites[selected],g.x,g.y,54,g.facing<0,bob,false)}ctx.restore()}
-function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);let mobile=matchMedia('(pointer:coarse)').matches;let portrait=mobile&&h>w;let small=!mobile&&(w<600||h<380);$('#orientation').classList.toggle('hidden',!portrait);$('#smallWindow').classList.toggle('hidden',!small);blocked=portrait||small;updateJoystick()}
+function resize(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);let mobile=matchMedia('(pointer:coarse)').matches;let small=!mobile&&(w<600||h<380);$('#orientation').classList.add('hidden');$('#smallWindow').classList.toggle('hidden',!small);blocked=small;updateJoystick()}
 function frame(now){let dt=Math.min((now-last)/1000,.05);last=now;if(toastTime>0){toastTime-=dt;if(toastTime<=0)$('#toast').classList.add('hidden')}if(!document.hidden&&!blocked){if(state==='playing')step(dt);else if(state==='upgrade'&&save.settings.auto&&modalType==='选择一项强化'){autoLeft-=dt;let counter=$('#autoCounter');if(counter)counter.textContent=Math.ceil(autoLeft)+' 秒后自动选择';if(autoLeft<=0){toast('已自动选择');applyChoice(options[Math.floor(Math.random()*options.length)])}}draw()}requestAnimationFrame(frame)}
 addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{last=performance.now();keys={};joy.x=joy.y=0});addEventListener('keydown',e=>{let k=e.key.toLowerCase();keys[k]=true;if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();if(k==='escape'&&state==='playing')$('#pauseBtn').click()});addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});let joystick=$('#joystick');joystick.addEventListener('pointerdown',e=>{if(state!=='playing')return;joy.id=e.pointerId;joystick.setPointerCapture(e.pointerId);moveJoy(e)});joystick.addEventListener('pointermove',e=>{if(e.pointerId===joy.id&&state==='playing')moveJoy(e)});function endJoy(e){if(e.pointerId!==joy.id)return;joy.id=null;joy.x=joy.y=0;$('#stick').style.transform=''}joystick.addEventListener('pointerup',endJoy);joystick.addEventListener('pointercancel',endJoy);function moveJoy(e){let r=joystick.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),m=Math.hypot(x,y),limit=33;if(m>limit){x=x/m*limit;y=y/m*limit}joy.x=x/limit;joy.y=y/limit;$('#stick').style.transform='translate('+x+'px,'+y+'px)'}
 resize();renderHome();requestAnimationFrame(frame);
